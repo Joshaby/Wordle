@@ -38,17 +38,47 @@ public class WorldleApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws IOException {
 		loadWords();
+		Palavra palavraObj;
+		int qtdeTentativas = 6;
+		int tamanho;
 		while (true) {
 			try {
-				System.out.print("Digite o tamanho da palavra: ");
-				int tamanho = input.nextInt();
-				System.out.printf("Tamanho selecionado: %d\n", tamanho);
+				System.out.print("Digite o tamanho da palavra(mínimo de 2 letras): ");
+				tamanho = input.nextInt();
 				System.out.println("Buscando palavra...");
-				Palavra palavra = service.findPalavraByTamanho(tamanho);
-				System.out.println(palavra);
-				System.out.println();
+				palavraObj = service.findPalavraByTamanho(tamanho);
+				System.out.println(palavraObj);
+				break;
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
+			}
+		}
+		System.out.print("Deseja alterar a quantidade de tentativas?(Digite s para sim e n para não) ");
+		String reposta = input.next();
+		switch (reposta.toLowerCase()) {
+			case "s" :
+				System.out.print("Digite a nova quantidade de tentativas: ");
+				qtdeTentativas = input.nextInt();
+				break;
+			case "n" :
+				System.out.print("Ok! Será mantido o padrão de 6 tentativas!");
+				break;
+			default:
+				System.out.println("É o que kkkjj? Será mantido o padrão de 6 tentativas!");
+				break;
+		}
+		while (qtdeTentativas != 0) {
+			String palavra;
+			System.out.print("Digite uma palavra: ");
+			palavra = input.next();
+			if (palavra.length() > palavraObj.getTamanho() || palavra.length() < palavraObj.getTamanho()) {
+				System.out.printf("Você precisa digitar uma palavra de tamanho %d!\n", tamanho);
+			} else {
+				if (palavra.equals(palavraObj.getPalavra())) {
+					System.out.println("PARABÉNS!!! Você acertou a palavra!!! Tome aqui 10 centavos de moral!!!");
+					System.exit(0);
+				}
+				qtdeTentativas --;
 			}
 		}
 	}
