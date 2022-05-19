@@ -2,6 +2,7 @@ package com.edu.ifpb.worldle;
 
 import com.edu.ifpb.worldle.entities.Palavra;
 import com.edu.ifpb.worldle.repositories.PalavraRepository;
+import com.edu.ifpb.worldle.services.PalavraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,12 +23,11 @@ public class WorldleApplication implements CommandLineRunner {
 	@Autowired
 	public PalavraRepository repository;
 
+	@Autowired
+	public PalavraService service;
+
 	private final static String WORDS_SMALL_TXT = "words-small.txt";
 	private final static String WORDS_TXT = "words.txt";
-
-	private final static int QTDE_PALAVRAS = 261799;
-
-	private Random gerador = new Random();
 
 	private Scanner input = new Scanner(System.in);
 
@@ -39,19 +39,24 @@ public class WorldleApplication implements CommandLineRunner {
 	public void run(String... args) throws IOException {
 		loadWords();
 		while (true) {
-			System.out.print("Digite o tamanho da palavra: ");
-			int tamanho = input.nextInt();
-			System.out.printf("Tamanho selecionado: %d\n", tamanho);
-			System.out.println("Buscando palavra...");
-			System.out.println(repository.findRandByTamanho(tamanho).get(0));
-			System.out.println();
+			try {
+				System.out.print("Digite o tamanho da palavra: ");
+				int tamanho = input.nextInt();
+				System.out.printf("Tamanho selecionado: %d\n", tamanho);
+				System.out.println("Buscando palavra...");
+				Palavra palavra = service.findPalavraByTamanho(tamanho);
+				System.out.println(palavra);
+				System.out.println();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 
 	private void loadWords() throws IOException {
 		File worlds = new File(WORDS_TXT);
 		if (worlds.exists()) {
-			List<String> worldsList = new ArrayList<>(Files.readAllLines(Path.of(WORDS_TXT)));
+			List<String> worldsList = new ArrayList<>(Files.readAllLines(Path.of(WORDS_SMALL_TXT)));
 			for (String world : worldsList) {
 				repository.save(new Palavra(null, world, world.length()));
 			}
