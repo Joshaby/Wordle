@@ -1,1 +1,1 @@
-# Wordle-backend
+# Wordle
