@@ -24,56 +24,68 @@ public class WorldleApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws IOException {
-		Palavra palavraObj;
+		int qtdeJogadas;
 		int qtdeTentativas = 600;
 		int count = 1;
 		int tamanho;
+		Palavra palavraObj;
 		while (true) {
 			try {
-				System.out.print("Digite o tamanho da palavra(mínimo de 2 letras): ");
-				tamanho = input.nextInt();
-				System.out.println("Buscando palavra...");
-				palavraObj = service.findPalavraByTamanho(tamanho);
-				//palavraObj = new Palavra(null, "arara", 5);
-				System.out.println(palavraObj);
+				System.out.print("\nDigite a quantidade de vezes que você quer esse jogo: ");
+				qtdeJogadas = input.nextInt();
 				break;
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				System.out.println("Digite apenas números!!");
 			}
 		}
-		System.out.print("Deseja alterar a quantidade de tentativas?(Digite s para sim e n para não) ");
-		String reposta = input.next();
-		switch (reposta.toLowerCase()) {
-			case "s" :
-				System.out.print("Digite a nova quantidade de tentativas: ");
-				qtdeTentativas = input.nextInt();
-				break;
-			case "n" :
-				System.out.println("Ok! Será mantido o padrão de 6 tentativas!");
-				break;
-			default:
-				System.out.println("É o que kkkjj? Enfim, Será mantido o padrão de 6 tentativas!");
-				break;
-		}
-		while (qtdeTentativas != 0) {
-			String palavra;
-			System.out.printf("(Tentativa %d) Digite uma palavra: ", count);
-			palavra = input.next();
-			if (palavra.length() > palavraObj.getTamanho() || palavra.length() < palavraObj.getTamanho()) {
-				System.out.printf("Você precisa digitar uma palavra de tamanho %d!\n", tamanho);
-			} else {
-				if (palavra.equals(palavraObj.getPalavra())) {
-					System.out.println("PARABÉNS!!! Você acertou a palavra!!! Tome aqui 10 centavos de moral!!!");
-					System.exit(0);
-				} else {
-					verificarPalavraDigitada(palavra, palavraObj.getPalavra(), tamanho);
+		for (int i = 0; i < qtdeJogadas; i ++) {
+			while (true) {
+				try {
+					System.out.print("\nDigite o tamanho da palavra(mínimo de 2 letras): ");
+					tamanho = input.nextInt();
+					System.out.println("Buscando palavra...");
+					palavraObj = service.findPalavraByTamanho(tamanho);
+					//palavraObj = new Palavra(null, "arara", 5);
+					System.out.println(palavraObj);
+					break;
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
 				}
-				qtdeTentativas --;
-				count ++;
 			}
+			System.out.print("Deseja alterar a quantidade de tentativas?(Digite s para sim e n para não) ");
+			String reposta = input.next();
+			switch (reposta.toLowerCase()) {
+				case "s" :
+					System.out.print("Digite a nova quantidade de tentativas: ");
+					qtdeTentativas = input.nextInt();
+					break;
+				case "n" :
+					System.out.println("Ok! Será mantido o padrão de 6 tentativas!");
+					break;
+				default:
+					System.out.println("É o que kkkjj? Enfim, Será mantido o padrão de 6 tentativas!");
+					break;
+			}
+			while (qtdeTentativas != 0) {
+				String palavra;
+				System.out.printf("(Tentativa %d) Digite uma palavra: ", count);
+				palavra = input.next();
+				if (palavra.length() > palavraObj.getTamanho() || palavra.length() < palavraObj.getTamanho()) {
+					System.out.printf("Você precisa digitar uma palavra de tamanho %d!\n", tamanho);
+				} else {
+					if (palavra.equals(palavraObj.getPalavra())) {
+						System.out.println("PARABÉNS!!! Você acertou a palavra!!! Tome aqui 10 centavos de moral!!!\n");
+						System.exit(0);
+					} else {
+						verificarPalavraDigitada(palavra, palavraObj.getPalavra(), tamanho);
+					}
+					qtdeTentativas --;
+					count ++;
+				}
+			}
+			System.out.printf("Infelizmente, você não acertou a palavra ); !! E ela era \"%s\"\n\n", palavraObj.getPalavra());
+			System.exit(0);
 		}
-		System.out.printf("Infelizmente, você não acertou a palavra ); !! E ela era \"%s\"\n", palavraObj.getPalavra());
-		System.exit(0);
 	}
 
 	private void verificarPalavraDigitada(String palavra, String palavra1, int tamanho) {
