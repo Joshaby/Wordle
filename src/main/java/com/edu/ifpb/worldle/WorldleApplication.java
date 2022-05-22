@@ -1,30 +1,20 @@
 package com.edu.ifpb.worldle;
 
 import com.edu.ifpb.worldle.entities.Palavra;
-import com.edu.ifpb.worldle.repositories.PalavraRepository;
 import com.edu.ifpb.worldle.services.PalavraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 @SpringBootApplication
 public class WorldleApplication implements CommandLineRunner {
 
 	@Autowired
-	public PalavraRepository repository;
-
-	@Autowired
 	public PalavraService service;
-
-	private final static String WORDS_SMALL_TXT = "words-small.txt";
-	private final static String WORDS_TXT = "words.txt";
 
 	private Scanner input = new Scanner(System.in);
 
@@ -34,9 +24,8 @@ public class WorldleApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws IOException {
-		// loadWords();
 		Palavra palavraObj;
-		int qtdeTentativas = 6;
+		int qtdeTentativas = 600;
 		int count = 1;
 		int tamanho;
 		while (true) {
@@ -45,7 +34,7 @@ public class WorldleApplication implements CommandLineRunner {
 				tamanho = input.nextInt();
 				System.out.println("Buscando palavra...");
 				palavraObj = service.findPalavraByTamanho(tamanho);
-				// palavraObj = new Palavra(null, "arara", 5);
+				//palavraObj = new Palavra(null, "arara", 5);
 				System.out.println(palavraObj);
 				break;
 			} catch (Exception e) {
@@ -114,26 +103,14 @@ public class WorldleApplication implements CommandLineRunner {
 	private boolean checarQuantidadeLetras(String letra, ArrayList<String> letras, String palavra) {
 		int qtdeInLetras = 0;
 		int qtdeInPalavra = 0;
-		for (String l : letras) {
-			if (l.equalsIgnoreCase(letra)) {
-				qtdeInLetras += 1;
-			}
-		}
 		for (int i = 0; i < palavra.length(); i ++) {
 			if (String.valueOf(palavra.charAt(i)).equalsIgnoreCase(letra)) {
 				qtdeInPalavra += 1;
 			}
-		}
-		return qtdeInLetras < qtdeInPalavra;
-	}
-
-	private void loadWords() throws IOException {
-		File worlds = new File(WORDS_TXT);
-		if (worlds.exists()) {
-			List<String> worldsList = new ArrayList<>(Files.readAllLines(Path.of(WORDS_SMALL_TXT)));
-			for (String world : worldsList) {
-				repository.save(new Palavra(null, world, world.length()));
+			if (letras.get(i).equalsIgnoreCase(letra)) {
+				qtdeInLetras += 1;
 			}
 		}
+		return qtdeInLetras < qtdeInPalavra;
 	}
 }
