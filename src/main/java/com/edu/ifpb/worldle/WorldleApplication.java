@@ -25,7 +25,7 @@ public class WorldleApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws IOException {
 		int qtdeJogadas;
-		int qtdeTentativas = 600;
+		int qtdeTentativas = 6;
 		int count = 1;
 		int tamanho;
 		Palavra palavraObj;
@@ -45,8 +45,6 @@ public class WorldleApplication implements CommandLineRunner {
 					tamanho = input.nextInt();
 					System.out.println("Buscando palavra...");
 					palavraObj = service.findPalavraByTamanho(tamanho);
-					//palavraObj = new Palavra(null, "arara", 5);
-					System.out.println(palavraObj);
 					break;
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
@@ -84,7 +82,6 @@ public class WorldleApplication implements CommandLineRunner {
 				}
 			}
 			System.out.printf("Infelizmente, você não acertou a palavra ); !! E ela era \"%s\"\n\n", palavraObj.getPalavra());
-			System.exit(0);
 		}
 	}
 
