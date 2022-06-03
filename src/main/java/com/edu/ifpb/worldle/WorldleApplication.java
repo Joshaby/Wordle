@@ -70,6 +70,9 @@ public class WorldleApplication implements CommandLineRunner {
 				palavra = input.next();
 				if (palavra.length() > palavraObj.getTamanho() || palavra.length() < palavraObj.getTamanho()) {
 					System.out.printf("Você precisa digitar uma palavra de tamanho %d!\n", tamanho);
+				}
+				else if (checarNumeros(palavra)) {
+					System.out.println("Você digitou uma palavra com número!! Tente novamente!!");
 				} else {
 					if (palavra.equals(palavraObj.getPalavra())) {
 						System.out.println("PARABÉNS!!! Você acertou a palavra!!! Tome aqui 10 centavos de moral!!!\n");
@@ -121,5 +124,9 @@ public class WorldleApplication implements CommandLineRunner {
 			}
 		}
 		return qtdeInLetras < qtdeInPalavra;
+	}
+
+	private boolean checarNumeros(String palavra) {
+		return palavra.matches(".*[0-9].*");
 	}
 }
