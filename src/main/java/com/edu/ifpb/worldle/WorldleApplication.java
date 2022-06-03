@@ -33,7 +33,11 @@ public class WorldleApplication implements CommandLineRunner {
 			try {
 				System.out.print("\nDigite a quantidade de vezes que você quer esse jogo: ");
 				qtdeJogadas = input.nextInt();
-				break;
+				if (qtdeJogadas <= 0) {
+					System.out.println("Não digite 0 ou número negativo kkjj!!");
+				} else {
+					break;
+				}
 			} catch (Exception e) {
 				System.out.println("Digite apenas números!!");
 			}
@@ -43,9 +47,13 @@ public class WorldleApplication implements CommandLineRunner {
 				try {
 					System.out.print("\nDigite o tamanho da palavra(mínimo de 2 letras): ");
 					tamanho = input.nextInt();
-					System.out.println("Buscando palavra...");
-					palavraObj = service.findPalavraByTamanho(tamanho);
-					break;
+					if (tamanho < 2) {
+						System.out.println("Digite um número maior do que 2!!");
+					} else {
+						System.out.println("Buscando palavra...");
+						palavraObj = service.findPalavraByTamanho(tamanho);
+						break;
+					}
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
