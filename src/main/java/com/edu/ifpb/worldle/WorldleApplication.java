@@ -84,7 +84,6 @@ public class WorldleApplication implements CommandLineRunner {
 				} else {
 					if (palavra.equals(palavraObj.getPalavra())) {
 						System.out.println("PARABÉNS!!! Você acertou a palavra!!! Tome aqui 10 centavos de moral!!!\n");
-						System.exit(0);
 					} else {
 						verificarPalavraDigitada(palavra, palavraObj.getPalavra(), tamanho);
 					}
@@ -93,7 +92,11 @@ public class WorldleApplication implements CommandLineRunner {
 				}
 			}
 			System.out.printf("Infelizmente, você não acertou a palavra ); !! E ela era \"%s\"\n\n", palavraObj.getPalavra());
+			qtdeTentativas = 6;
+			count = 1;
 		}
+		System.out.println("Obrigado por jogar!! Até um outro dia!!");
+		System.exit(0);
 	}
 
 	private void verificarPalavraDigitada(String palavra, String palavra1, int tamanho) {
