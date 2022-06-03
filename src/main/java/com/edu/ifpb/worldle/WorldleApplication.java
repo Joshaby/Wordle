@@ -34,12 +34,12 @@ public class WorldleApplication implements CommandLineRunner {
 				System.out.print("\nDigite a quantidade de vezes que você quer esse jogo: ");
 				qtdeJogadas = input.nextInt();
 				if (qtdeJogadas <= 0) {
-					System.out.println("Não digite 0 ou número negativo kkjj!!");
+					System.out.println("Não digite 0 ou número negativo kkjj!!\n");
 				} else {
 					break;
 				}
 			} catch (Exception e) {
-				System.out.println("Digite apenas números!!");
+				System.out.println("Digite apenas números!!\n");
 			}
 		}
 		for (int i = 0; i < qtdeJogadas; i ++) {
@@ -50,7 +50,7 @@ public class WorldleApplication implements CommandLineRunner {
 					if (tamanho < 2) {
 						System.out.println("Digite um número maior do que 2!!");
 					} else {
-						System.out.println("Buscando palavra...");
+						System.out.println("Buscando palavra...\n");
 						palavraObj = service.findPalavraByTamanho(tamanho);
 						break;
 					}
@@ -62,14 +62,22 @@ public class WorldleApplication implements CommandLineRunner {
 			String reposta = input.next();
 			switch (reposta.toLowerCase()) {
 				case "s" :
-					System.out.print("Digite a nova quantidade de tentativas: ");
-					qtdeTentativas = input.nextInt();
+					while (true) {
+						System.out.print("Digite a nova quantidade de tentativas: ");
+						try {
+							qtdeTentativas = input.nextInt();
+							break;
+						} catch (InputMismatchException e) {
+							input.nextLine();
+							System.out.println("Digite apenas números!!\n");
+						}
+					}
 					break;
 				case "n" :
-					System.out.println("Ok! Será mantido o padrão de 6 tentativas!");
+					System.out.println("Ok! Será mantido o padrão de 6 tentativas!\n");
 					break;
 				default:
-					System.out.println("É o que kkkjj? Enfim, Será mantido o padrão de 6 tentativas!");
+					System.out.println("É o que kkkjj? Enfim, Será mantido o padrão de 6 tentativas!\n");
 					break;
 			}
 			while (qtdeTentativas != 0) {
@@ -80,7 +88,7 @@ public class WorldleApplication implements CommandLineRunner {
 					System.out.printf("Você precisa digitar uma palavra de tamanho %d!\n", tamanho);
 				}
 				else if (checarNumeros(palavra)) {
-					System.out.println("Você digitou uma palavra com número!! Tente novamente!!");
+					System.out.println("Você digitou uma palavra com número!! Tente novamente!!\n");
 				} else {
 					if (palavra.equals(palavraObj.getPalavra())) {
 						System.out.println("PARABÉNS!!! Você acertou a palavra!!! Tome aqui 10 centavos de moral!!!\n");
