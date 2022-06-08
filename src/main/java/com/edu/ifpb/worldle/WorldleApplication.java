@@ -1,13 +1,18 @@
 package com.edu.ifpb.worldle;
 
 import com.edu.ifpb.worldle.entities.Palavra;
+import com.edu.ifpb.worldle.entities.Usuario;
 import com.edu.ifpb.worldle.services.PalavraService;
+import com.edu.ifpb.worldle.services.UsuarioService;
+import com.edu.ifpb.worldle.services.exceptions.PasswordException;
+import com.edu.ifpb.worldle.services.exceptions.UsuarioException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @SpringBootApplication
@@ -15,6 +20,9 @@ public class WorldleApplication implements CommandLineRunner {
 
 	@Autowired
 	public PalavraService service;
+
+	@Autowired
+	public UsuarioService usuarioService;
 
 	private Scanner input = new Scanner(System.in);
 
@@ -24,6 +32,7 @@ public class WorldleApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws IOException {
+		Usuario usuario = userLogin();
 		int qtdeJogadas;
 		int qtdeTentativas = 6;
 		int count = 1;
@@ -85,7 +94,7 @@ public class WorldleApplication implements CommandLineRunner {
 				System.out.printf("(Tentativa %d) Digite uma palavra: ", count);
 				palavra = input.next();
 				if (palavra.length() > palavraObj.getTamanho() || palavra.length() < palavraObj.getTamanho()) {
-					System.out.printf("Você precisa digitar uma palavra de tamanho %d!\n", tamanho);
+					System.out.printf("Você precisa digitar uma palavra de tamanho %d!\n\n", tamanho);
 				}
 				else if (checarNumeros(palavra)) {
 					System.out.println("Você digitou uma palavra com número!! Tente novamente!!\n");
@@ -103,6 +112,8 @@ public class WorldleApplication implements CommandLineRunner {
 			qtdeTentativas = 6;
 			count = 1;
 		}
+		usuario.setLastTimePlayed(getCurrentDate());
+		usuario = usuarioService.update(usuario);
 		System.out.println("Obrigado por jogar!! Até um outro dia!!");
 		System.exit(0);
 	}
@@ -147,5 +158,44 @@ public class WorldleApplication implements CommandLineRunner {
 
 	private boolean checarNumeros(String palavra) {
 		return palavra.matches(".*[0-9].*");
+	}
+
+	private Usuario userLogin() {
+		while (true) {
+			try {
+				System.out.print("Digite sua seu email: ");
+				String email = input.next();
+				System.out.print("Digite sua senha: ");
+				String password = input.next();
+				Usuario usuario = usuarioService.existsUsuario(email, password);
+				if (getCurrentDate().equals(usuario.getLastTimePlayed())) {
+					System.out.println("Você já jogou hoje! Jogue amanhã meu nobre!!\n");
+					System.exit(0);
+				}
+				return usuario;
+			} catch (PasswordException e) {
+				System.out.println(e.getMessage());
+			} catch (UsuarioException e) {
+				System.out.println(e.getMessage());
+				while (true) {
+					try {
+						System.out.print("Digite sua seu email: ");
+						String email = input.next();
+						System.out.print("Digite sua senha: ");
+						String password = input.next();
+						Usuario usuario = new Usuario(null, email, password, getCurrentDate());
+						return usuarioService.save(usuario);
+					} catch (UsuarioException e1) {
+						System.out.println(e1.getMessage());
+					}
+				}
+			}
+		}
+	}
+
+	private String getCurrentDate() {
+		Date currentDate = new Date(System.currentTimeMillis());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
+		return dateFormat.format(currentDate);
 	}
 }
