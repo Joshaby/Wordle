@@ -48,6 +48,7 @@ public class WorldleApplication implements CommandLineRunner {
 					break;
 				}
 			} catch (Exception e) {
+				input.nextLine();
 				System.out.println("Digite apenas números!!\n");
 			}
 		}
