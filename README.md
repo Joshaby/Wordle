@@ -12,4 +12,4 @@ A aplicação tem dois ambientes, test e dev. Para mudar de ambiente, edite a li
 
 ### Como usar o banco H2?
 
-Abra o link `http://localhost:8080/h2-console` no seu navegador, em Driver Class org.h2.Driver, em JDBC URL coloque `jdbc:h2:mem:testdb`, em User Name coloque `sa` e em password deixe vazio. Após isso, você tera acesso as tabelas usada pelo programa
+Abra o link `http://localhost:8080/h2-console` no seu navegador, em Driver Class coloque `org.h2.Driver`, em JDBC URL coloque `jdbc:h2:mem:testdb`, em User Name coloque `sa` e em password deixe vazio. Após isso, você tera acesso as tabelas usada pelo programa
