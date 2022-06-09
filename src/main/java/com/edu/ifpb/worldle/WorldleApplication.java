@@ -160,19 +160,27 @@ public class WorldleApplication implements CommandLineRunner {
 		return palavra.matches(".*[0-9].*");
 	}
 
+	private boolean checarEmail(String email) {
+		return email.matches("^(.+)@(.+)$");
+	}
+
 	private Usuario userLogin() {
 		while (true) {
 			try {
 				System.out.print("Digite sua seu email: ");
 				String email = input.next();
-				System.out.print("Digite sua senha: ");
-				String password = input.next();
-				Usuario usuario = usuarioService.existsUsuario(email, password);
-				if (getCurrentDate().equals(usuario.getLastTimePlayed())) {
-					System.out.println("Você já jogou hoje! Jogue amanhã meu nobre!!\n");
-					System.exit(0);
+				if (checarEmail(email)) {
+					System.out.print("Digite sua senha: ");
+					String password = input.next();
+					Usuario usuario = usuarioService.existsUsuario(email, password);
+					if (getCurrentDate().equals(usuario.getLastTimePlayed())) {
+						System.out.println("Você já jogou hoje! Jogue amanhã meu nobre!!\n");
+						System.exit(0);
+					}
+					return usuario;
+				} else {
+					System.out.println("Digite um email válido!\n");
 				}
-				return usuario;
 			} catch (PasswordException e) {
 				System.out.println(e.getMessage());
 			} catch (UsuarioException e) {
@@ -181,10 +189,14 @@ public class WorldleApplication implements CommandLineRunner {
 					try {
 						System.out.print("Digite sua seu email: ");
 						String email = input.next();
-						System.out.print("Digite sua senha: ");
-						String password = input.next();
-						Usuario usuario = new Usuario(null, email, password, getCurrentDate());
-						return usuarioService.save(usuario);
+						if (checarEmail(email)) {
+							System.out.print("Digite sua senha: ");
+							String password = input.next();
+							Usuario usuario = new Usuario(null, email, password, getCurrentDate());
+							return usuarioService.save(usuario);
+						} else {
+							System.out.println("Digite um email válido!\n");
+						}
 					} catch (UsuarioException e1) {
 						System.out.println(e1.getMessage());
 					}
